@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk, ImageEnhance, ImageOps
@@ -178,12 +177,6 @@ class SVMTumorClassifier:
         
         X = np.array(features)
         y = np.array(labels)
-
-        #
-        if X.size == 0:
-            print("❌ Error: No features found. Check if 'norm' folder has valid images and feature extraction is working.")
-            return
-        #
         
         # Scale features
         X = self.scaler.fit_transform(X)
@@ -295,7 +288,7 @@ class MainFrame(tk.Tk):
     def batTraining(self):
         unitsPerPixel = 1
         # folder = "Norm"
-        folder = r"C:\Users\Admin\Documents\final year project\final year project\Norm"
+        folder = r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\Norm"
         files = os.listdir(folder)
         imgset = Imageset()
         for fname in files:
@@ -324,7 +317,7 @@ class MainFrame(tk.Tk):
             self.btn4.config(state="normal")
 
     def trainSVM(self):
-        folder = r"C:\Users\Admin\Documents\final year project\final year project\Norm"
+        folder = r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\Norm"
         files = os.listdir(folder)
         
         # Create dummy labels (0 for normal, 1 for tumor)
@@ -487,7 +480,7 @@ class PreprocessFrame(tk.Toplevel):
 
 
     def display1(self):
-        folder =  r"C:\Users\Admin\Documents\final year project\final year project\Bias"
+        folder =  r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\Bias"
         files = os.listdir(folder)
         for i in range(min(5, len(files))):
             path = os.path.join(folder, files[i])
@@ -498,7 +491,7 @@ class PreprocessFrame(tk.Toplevel):
             self.biasLabels[i].image = photo
 
     def display2(self):
-        folder =  r"C:\Users\Admin\Documents\final year project\final year project\Norm"
+        folder =  r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\Norm"
         files = os.listdir(folder)
         for i in range(min(5, len(files))):
             path = os.path.join(folder, files[i])
@@ -683,20 +676,11 @@ class TestPreprocessFrame(tk.Toplevel):
             rg = RegionGrowing(cv_image, preprocess=True)
             rg.run()
             seg = rg.getOutput()
-            #seg.save(r"C:\Users\Admin\Documents\final year project\final year project\seg.jpg")
-            import os
-            import uuid
-# Folder where segmented images will be saved
-            norm_path = r"C:\Users\Admin\Documents\final year project\final year project\norm"
-# Create the folder if it doesn't exist
-            if not os.path.exists(norm_path):
-                os.makedirs(norm_path)
-                filename = f"{uuid.uuid4().hex}.jpg"
-                seg.save(os.path.join(norm_path, filename))
-                print("✅ Image saved:", os.path.join(norm_path, filename))
-                ResultFrame()
-            except Exception as e:
-                print(e)
+            seg.save(r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\seg.jpg")
+            ResultFrame()
+            #ResultFrame().mainloop()
+        except Exception as e:
+            print(e)
 
 # -------------------- ResultFrame (Segmented Result GUI) --------------------
 class ResultFrame(tk.Toplevel):
@@ -711,7 +695,7 @@ class ResultFrame(tk.Toplevel):
         self.display()
 
     def display(self):
-        with Image.open(r"C:\Users\Admin\Documents\final year project\final year project\seg.jpg") as image:
+        with Image.open(r"C:\Users\Admin\Downloads\Tumor_Bat\Tumor_Bat\seg.jpg") as image:
             resized = image.resize((331, 299), resample=Image.LANCZOS)
         photo = ImageTk.PhotoImage(resized)
         self.imgLabel.config(image=photo)
